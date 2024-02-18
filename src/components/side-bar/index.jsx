@@ -7,13 +7,14 @@ export const SideBar = () => {
 
   return (
     <Box
+      display={["none", "block"]}
       bg="#030d19"
       color="white"
       borderRight="1px"
       borderColor="#6aa7f8"
       p="20px"
       w="250px"
-      h="100vh"
+      minH="100vh"
     >
       <Box display="flex" flexDirection="column" gap="20px">
         <Input borderColor="#6aa7f8" placeholder="Search" />
