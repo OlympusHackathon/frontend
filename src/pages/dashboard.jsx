@@ -1,9 +1,25 @@
-import { Box, Button, Flex, Grid, Heading, Textarea } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Textarea } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { HiMiniArrowRightCircle } from "react-icons/hi2";
 
 const Dashboard = () => {
   const [userText, setUserText] = useState("");
+  const [recentSummaries, setRecentSummaries] = useState([]);
+
+  const handleUserTextChange = (event) => {
+    setUserText(event.target.value);
+  };
+
+  const handleGenerateSummary = () => {
+    // Add your logic for generating the summary here
+    // For now, let's set the userText to recentSummaries
+    const newGeneratedSummary = userText.trim();
+    if (newGeneratedSummary) {
+      setRecentSummaries([...recentSummaries, newGeneratedSummary]);
+      setUserText(""); // Clear the userText after generating summary
+    }
+  };
+
   return (
     <Flex w="100%" flexDirection="column" gap="40px">
       <Heading>Quick Summary</Heading>
@@ -30,6 +46,8 @@ const Dashboard = () => {
         >
           <Box w="100%" position="relative">
             <Textarea
+              value={userText}
+              onChange={handleUserTextChange}
               boxShadow="xs"
               w="100%"
               border="none"
@@ -53,6 +71,8 @@ const Dashboard = () => {
           </Box>
           <Box w="100%">
             <Textarea
+              value=""
+              isReadOnly
               boxShadow="xs"
               w="100%"
               border="none"
@@ -61,12 +81,12 @@ const Dashboard = () => {
               h="300px"
               rounded="8px"
               p="40px"
-              isReadOnly
               placeholder="Output summary"
             />
           </Box>
         </Flex>
         <Button
+          onClick={handleGenerateSummary}
           _hover={{ bg: "#6aa7f8" }}
           color="white"
           w="200px"
@@ -90,39 +110,20 @@ const Dashboard = () => {
         rounded="8px"
         p="40px"
       >
-        <Box
-          boxShadow="xs"
-          w={["250px", "100%"]}
-          border="1px"
-          borderColor="#6aa7f8"
-          bg="#03101c"
-          rounded="8px"
-          p="40px"
-        >
-          First data
-        </Box>
-        <Box
-          boxShadow="xs"
-          w={["250px", "100%"]}
-          border="1px"
-          borderColor="#6aa7f8"
-          bg="#03101c"
-          rounded="8px"
-          p="40px"
-        >
-          First data
-        </Box>
-        <Box
-          boxShadow="xs"
-          w={["250px", "100%"]}
-          border="1px"
-          borderColor="#6aa7f8"
-          rounded="8px"
-          bg="#03101c"
-          p="40px"
-        >
-          First data
-        </Box>
+        {recentSummaries.map((summary, index) => (
+          <Box
+            key={index}
+            boxShadow="xs"
+            w={["250px", "100%"]}
+            border="1px"
+            borderColor="#6aa7f8"
+            bg="#03101c"
+            rounded="8px"
+            p="40px"
+          >
+            {summary}
+          </Box>
+        ))}
       </Flex>
     </Flex>
   );
