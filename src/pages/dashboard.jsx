@@ -1,9 +1,11 @@
 import { Box, Button, Flex, Heading, Textarea } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { HiMiniArrowRightCircle } from "react-icons/hi2";
+import axios from "axios";
 
 const Dashboard = () => {
   const [userText, setUserText] = useState("");
+  const [summary, setSummary] = useState("");
   const [recentSummaries, setRecentSummaries] = useState([]);
 
   const handleUserTextChange = (event) => {
@@ -14,15 +16,27 @@ const Dashboard = () => {
       JSON.parse(localStorage.getItem("recentSummaries")) || ""
     );
   }, [localStorage]);
-  const handleGenerateSummary = () => {
+  const handleGenerateSummary = async () => {
     const newGeneratedSummary = userText.trim();
     if (newGeneratedSummary) {
-      setRecentSummaries([...recentSummaries, newGeneratedSummary]);
-      localStorage.setItem(
-        "recentSummaries",
-        JSON.stringify([...recentSummaries, newGeneratedSummary])
-      );
-      setUserText("");
+      await axios
+        .post(
+          "http://localhost:8800/hello",
+          { newGeneratedSummary },
+          {
+            headers: {
+              "Content-Type": "text/plain",
+            },
+          }
+        )
+        .then((res) => {
+          setRecentSummaries([...recentSummaries, res.data.message]);
+          localStorage.setItem(
+            "recentSummaries",
+            JSON.stringify([...recentSummaries, res.data.message])
+          );
+          setSummary(res.data.message);
+        });
     }
   };
 
@@ -77,8 +91,8 @@ const Dashboard = () => {
           </Box>
           <Box w="100%">
             <Textarea
-              value=""
               isReadOnly
+              value={summary}
               boxShadow="xs"
               w="100%"
               border="none"
@@ -109,6 +123,7 @@ const Dashboard = () => {
         overflowX={["scroll", "hidden"]}
         w="100%"
         border="1px"
+        flexWrap="wrap"
         borderColor="#6aa7f8"
         gap="30px"
         bg="#03101c"
@@ -119,7 +134,7 @@ const Dashboard = () => {
           <Box
             key={index}
             boxShadow="xs"
-            w={["250px", "100%"]}
+            w={["250px", "400px"]}
             border="1px"
             borderColor="#6aa7f8"
             bg="#03101c"

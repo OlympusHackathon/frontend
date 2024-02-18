@@ -1,11 +1,13 @@
-import { Box, Button, Flex, Heading } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Image } from "@chakra-ui/react";
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { ReactComponent as PdfIcon } from "../pdf-svgrepo-com.svg";
+import axios from "axios";
 
 const Converter = () => {
   const [file, setFile] = useState(null);
   const [summary, setSummary] = useState("");
+  const [images, setImages] = useState([]);
 
   const onDrop = useCallback((acceptedFiles) => {
     if (acceptedFiles[0].type !== "application/pdf") {
@@ -27,10 +29,21 @@ const Converter = () => {
     setSummary("");
   };
 
-  const sendPost = () =>
-    setSummary(
-      "Summary will be here asj dlsaj las;kj k;lasj ;lkash;j ahsjk ahs akjslh kas faskldjf laksjdlk j;alsdj l;asjd lkfsjal jflsadkj flksaj;l jasl;dj flk;asdj ljasdlk jfasd fasdlkj alsdkj lfasdj ;asd lk;jasdl kjl"
-    );
+  const sendPost = async () => {
+    const formData = new FormData();
+    formData.append("file", file);
+    await axios
+      .post("http://localhost:8800", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setSummary(res.data.message);
+        setImages([res.data.img, res.data.img2]);
+      });
+  };
   return (
     <Flex
       flexDirection="column"
@@ -103,19 +116,32 @@ const Converter = () => {
         </Box>
       )}
       {summary && (
-        <Box
-          w="100%"
-          gap="20px"
-          bg="#03101c"
-          rounded="16px"
-          p="25px"
-          border="1px"
-          borderColor="#6aa7f8"
-        >
-          <Heading size="xs" mb={2} color="white">
-            {summary}
-          </Heading>
-        </Box>
+        <>
+          <Box
+            w="100%"
+            gap="20px"
+            bg="#03101c"
+            rounded="16px"
+            p="25px"
+            border="1px"
+            borderColor="#6aa7f8"
+          >
+            <Heading size="xs" mb={2} color="white">
+              {summary}
+            </Heading>
+          </Box>
+          <Flex gap="40px">
+            {images.map((img, index) => (
+              <img
+                width="300px"
+                height="300px"
+                key={index}
+                src={img}
+                alt="ML generated"
+              />
+            ))}
+          </Flex>
+        </>
       )}
     </Flex>
   );
