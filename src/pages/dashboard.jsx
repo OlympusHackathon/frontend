@@ -11,12 +11,14 @@ const Dashboard = () => {
   };
 
   const handleGenerateSummary = () => {
-    // Add your logic for generating the summary here
-    // For now, let's set the userText to recentSummaries
     const newGeneratedSummary = userText.trim();
     if (newGeneratedSummary) {
       setRecentSummaries([...recentSummaries, newGeneratedSummary]);
-      setUserText(""); // Clear the userText after generating summary
+      localStorage.setItem(
+        "recentSummaries",
+        JSON.stringify([...recentSummaries, newGeneratedSummary])
+      );
+      setUserText("");
     }
   };
 
