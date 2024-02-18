@@ -1,10 +1,11 @@
-import { Badge, Box, Flex } from "@chakra-ui/react";
+import { Badge, Box, Flex, Heading } from "@chakra-ui/react";
 import React from "react";
 
 const History = () => {
   const summs = localStorage.getItem("recentSummaries");
   return (
     <Flex direction="column" gap="40px">
+      <Heading>Overall History</Heading>
       {JSON.parse(summs)?.length > 0 ? (
         JSON.parse(summs)?.map((sum) => (
           <Box
@@ -13,7 +14,6 @@ const History = () => {
             borderColor="#6aa7f8"
             boxShadow="xs"
             w="100%"
-            h="300px"
             rounded="8px"
             p="40px"
           >

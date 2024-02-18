@@ -1,5 +1,5 @@
 import { Box, Button, Flex, Heading, Textarea } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { HiMiniArrowRightCircle } from "react-icons/hi2";
 
 const Dashboard = () => {
@@ -9,7 +9,11 @@ const Dashboard = () => {
   const handleUserTextChange = (event) => {
     setUserText(event.target.value);
   };
-
+  useEffect(() => {
+    setRecentSummaries(
+      JSON.parse(localStorage.getItem("recentSummaries")) || ""
+    );
+  }, [localStorage]);
   const handleGenerateSummary = () => {
     const newGeneratedSummary = userText.trim();
     if (newGeneratedSummary) {
@@ -108,11 +112,10 @@ const Dashboard = () => {
         borderColor="#6aa7f8"
         gap="30px"
         bg="#03101c"
-        h="300px"
         rounded="8px"
         p="40px"
       >
-        {recentSummaries.map((summary, index) => (
+        {recentSummaries?.map((summary, index) => (
           <Box
             key={index}
             boxShadow="xs"
